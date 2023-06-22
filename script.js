@@ -1,10 +1,16 @@
-btn.addEventListener('click', function (e) {
-    console.log(e);
-  });
-
-
 var playerScore = 0;
 var computerScore = 0;
+var gameState = true;
+
+function restartGame() {
+    gameState = true;
+    playerScore = 0;
+    computerScore = 0;
+    winner.textContent = "";
+    end.textContent = "";
+    playerScoreCounter.textContent = playerScore;
+    computerScoreCounter.textContent = computerScore;
+}
 
 function getPlayerSelection() {
     const choice = prompt("Rock, paper, or scissors?")
@@ -29,50 +35,75 @@ function getComputerChoice() {
     
 }
 
-const container = document.querySelector('#choices');
+const container = document.querySelector('.status');
 
-const div = document.createElement('div');
+const winner = document.querySelector('.winner');
 
-const rock = document.querySelector('.rock');
+const playerScoreCounter = document.querySelector('.playerScore');
 
-rock.addEventListener("click", playRound('rock', getComputerChoice()));
+const computerScoreCounter = document.querySelector('.computerScore');
 
+playerScoreCounter.textContent = playerScore;
+computerScoreCounter.textContent = computerScore;
+
+const btn = document.querySelector('#choices');
+
+const end = document.createElement('div');
+
+btn.addEventListener("click", (e) => {
+    playRound(e.target.id,getComputerChoice());
+    console.log(e.target.id);
+    playerScoreCounter.textContent = playerScore;
+    computerScoreCounter.textContent = computerScore;
+    if (playerScore == 5) {
+        end.textContent = "You win!"
+        gameState = false;
+    }
+    else if (computerScore == 5) {
+        end.textContent = "CPU wins!"
+        gameState = false;
+    }
+});
+
+const restart = document.querySelector('.restart');
+
+restart.addEventListener("click", () => {
+    restartGame();
+});
+
+container.append(winner);
+container.append(end);
 
 
 function playRound(playerSelection, getComputerChoice) {
-    if ((playerSelection === 'rock') && (getComputerChoice === 'paper')) {
-        computerScore++;
-        div.textContent =  "Paper beats rock! You lose!";
-        container.append(div);
-    }
-    else if ((playerSelection === 'rock') && (getComputerChoice === 'scissors')) {
-        computerScore++;
-        div.textContent =  "Scissors beats paper! You lose!";
-        container.append(div);
-    }
-    else if ((playerSelection === 'paper') && (getComputerChoice === 'rock')) {
-        playerScore++;
-        div.textContent =  "Paper beats rock! You win!";
-        container.append(div);
-    }
-    else if ((playerSelection === 'paper') && (getComputerChoice === 'scissors')) {
-        computerScore++;
-        div.textContent =  "Scissors beats paper! You lose!";
-        container.append(div);
-    }
-    else if ((playerSelection === 'scissors') && (getComputerChoice === 'rock')) {
-        computerScore++;
-        div.textContent =  "Rock beats scissors! You lose!";
-        container.append(div);
-    }
-    else if ((playerSelection === 'scissors') && (getComputerChoice === 'paper')) {
-        playerScore++;
-        div.textContent =  "Scissors beats paper! You win!";
-        container.append(div);
-    }
-    else {
-        div.textContent =  "Tie";
-        container.append(div);
+    if (gameState === true) {
+        if ((playerSelection === 'rock') && (getComputerChoice === 'paper')) {
+            computerScore++;
+            winner.textContent =  "Paper beats rock! You lose!";
+        }
+        else if ((playerSelection === 'rock') && (getComputerChoice === 'scissors')) {
+            computerScore++;
+            winner.textContent =  "Scissors beats paper! You lose!";
+        }
+        else if ((playerSelection === 'paper') && (getComputerChoice === 'rock')) {
+            playerScore++;
+            winner.textContent =  "Paper beats rock! You win!";
+        }
+        else if ((playerSelection === 'paper') && (getComputerChoice === 'scissors')) {
+            computerScore++;
+            winner.textContent =  "Scissors beats paper! You lose!";
+        }
+        else if ((playerSelection === 'scissors') && (getComputerChoice === 'rock')) {
+            computerScore++;
+            winner.textContent =  "Rock beats scissors! You lose!";
+        }
+        else if ((playerSelection === 'scissors') && (getComputerChoice === 'paper')) {
+            playerScore++;
+            winner.textContent =  "Scissors beats paper! You win!";
+        }
+        else if (playerSelection == getComputerChoice){
+            winner.textContent =  "Tie";
+        }
     }
 }
 
